@@ -1,0 +1,67 @@
+class Token:
+    def __init__(self, owner, amount):
+        self.owner = owner
+        self.amount = amount
+
+class Voter:
+    def __init__(self, name, tokens):
+        self.name = name
+        self.tokens = tokens
+
+class GovernanceSystem:
+    def __init__(self):
+        self.voters = {}
+        self.proposals = {}
+
+    def add_voter(self, name, tokens):
+        self.voters[name] = Voter(name, tokens)
+
+    def create_proposal(self, title, description):
+        proposal_id = len(self.proposals) + 1
+        self.proposals[proposal_id] = {'title': title, 'description': description, 'votes': {}}
+        return proposal_id
+
+    def vote(self, voter_name, proposal_id, tokens):
+        if voter_name not in self.voters:
+            print("Voter not found.")
+            return
+        if proposal_id not in self.proposals:
+            print("Proposal not found.")
+            return
+        if tokens > self.voters[voter_name].tokens:
+            print("Not enough tokens.")
+            return
+
+        if voter_name in self.proposals[proposal_id]['votes']:
+            self.voters[voter_name].tokens += self.proposals[proposal_id]['votes'][voter_name]
+        
+        self.voters[voter_name].tokens -= tokens
+        self.proposals[proposal_id]['votes'][voter_name] = tokens
+
+    def tally_votes(self, proposal_id):
+        if proposal_id not in self.proposals:
+            print("Proposal not found.")
+            return
+        
+        total_votes = sum(self.proposals[proposal_id]['votes'].values())
+        return total_votes
+
+# Example usage:
+governance = GovernanceSystem()
+
+# Adding voters
+governance.add_voter("Alice", 10)
+governance.add_voter("Bob", 20)
+governance.add_voter("Charlie", 15)
+
+# Creating a proposal
+proposal_id = governance.create_proposal("Proposal 1", "This is a sample proposal.")
+
+# Voting on the proposal
+governance.vote("Alice", proposal_id, 5)
+governance.vote("Bob", proposal_id, 10)
+governance.vote("Charlie", proposal_id, 8)
+
+# Tallying votes
+total_votes = governance.tally_votes(proposal_id)
+print("Total votes for Proposal 1:", total_votes)
