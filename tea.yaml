@@ -1,3 +1,13 @@
+# https://tea.xyz/what-is-this-file
+---
+version: 1.0.0
+codeOwners:
+  - '0x2894d5961827075aa87B1f2758e000aD7EdC649c'
+quorum: 1
+
+
+
+
 class Token:
     def __init__(self, owner, amount):
         self.owner = owner
